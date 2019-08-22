@@ -5,6 +5,7 @@ import 'videos.dart';
 import 'events.dart';
 import 'get_involved.dart';
 import 'settings.dart';
+import 'images.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'tiles/notification_tile.dart';
 import 'notification_database_helper.dart';
@@ -19,9 +20,86 @@ import 'event_database_helpers.dart';
 import 'event_list_tile.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'event_detail_screen.dart';
+// import 'package:carousel_slider/carousel_slider.dart';
+// import 'carousel_slider.dart';
+import 'tiles/video_list_tile.dart';
+import 'video_database_helpers.dart';
+import 'package:carousel/carousel.dart';
 
+// Video vid = VideoDatabaseHelper.instance.queryAllVideos().then((value) {
+//   return value[0];
+// });
+//new Video(dateSpoken: 'date', id: 1, title: 'Title', imageName: 'imageNmae', speaker: 'speaker', type: 'type');
+// Video vid2 = new Video(dateSpoken: 'date', id: 1, title: 'Title2', imageName: 'imageNmae', speaker: 'speaker2', type: 'type');
+
+// final List<String> imgList = [
+//   // vid,
+//   // vid2,
+//   'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
+//   'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
+//   // 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
+//   // 'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
+//   // 'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
+//   // 'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
+// ];
 
 void main() => runApp(MyApp());
+
+// final CarouselSlider autoPlayDemo = CarouselSlider(
+//   height: 280,
+//   viewportFraction: 0.9,
+//   aspectRatio: 2.0,
+//   autoPlay: true,
+//   enlargeCenterPage: true,
+//   items: imgList.map(
+//     (url) {
+//       return Container(
+//         margin: EdgeInsets.all(5.0),
+//         child: ClipRRect(
+//           borderRadius: BorderRadius.all(Radius.circular(5.0)),
+//           // child: Text(url.title),
+//           child: Image.network(
+//             url,
+//             fit: BoxFit.cover,
+//             width: 1000.0,
+//           ),
+//         ),
+//       );
+//     },
+//   ).toList(),
+// );
+
+// final List child = map<Widget>(
+//   imgList,
+//   (index, i) {
+//     return Container(
+//       margin: EdgeInsets.all(5.0),
+//       child: ClipRRect(
+//         borderRadius: BorderRadius.all(Radius.circular(5.0)),
+//         child: Stack(children: <Widget>[
+//           Image.network(i, fit: BoxFit.cover, width: 1000.0),
+//           // Positioned(
+//             // bottom: 0.0,
+//             // left: 0.0,
+//             // right: 0.0,
+//             Container(
+//               child: Text('No. $index image'),
+//             ),
+//           // ),
+//         ]),
+//       ),
+//     );
+//   },
+// ).toList();
+
+// List<T> map<T>(List list, Function handler) {
+//   List<T> result = [];
+//   for (var i = 0; i < list.length; i++) {
+//     result.add(handler(i, list[i]));
+//   }
+
+//   return result;
+// }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -43,7 +121,6 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-
 List<CustomPopupMenu> choices = <CustomPopupMenu>[
   CustomPopupMenu(title: 'Home and this is how we roll these awesome days yo', icon: Icons.home),
   CustomPopupMenu(title: 'Bookmarks', icon: Icons.bookmark),
@@ -53,12 +130,27 @@ List<CustomPopupMenu> choices = <CustomPopupMenu>[
 class _MyHomePageState extends State<MyHomePage> {
   // final _notificationsReference = Firestore.instance.collection('notifications');
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  
+  // ScrollController _scrollController;
+
   @override
   void initState() {
+    // _scrollController = new ScrollController(                         
+    //   initialScrollOffset: 0.0,                                       
+    //   keepScrollOffset: true,                                        
+    // );
     super.initState();
     FirebaseCloudMessaging_Listeners();
+    
+    
   }
+
+  // void _toEnd() {                                                 
+  //   _scrollController.animateTo(                                   
+  //     _scrollController.position.maxScrollExtent,                   
+  //     duration: const Duration(milliseconds: 500),                    
+  //     curve: Curves.ease,                                              
+  //   );                                                                
+  // }   
 
   void FirebaseCloudMessaging_Listeners() {
     if (Platform.isIOS) IOS_Permission();
@@ -113,30 +205,11 @@ class _MyHomePageState extends State<MyHomePage> {
     return _myListView(context);
   }
 
-  // Widget _buildNotificationsStream() {
-  //   return StreamBuilder<QuerySnapshot>(
-  //     stream: _notificationsReference.snapshots(),
-  //     builder: (_, snapshot) {
-  //       if(snapshot.hasData) {
-  //         return snapshot;
-  //       } else {
-  //         return CircularProgressIndicator();
-  //       }
-  //     },
-
-  //   );
-  // }
-
-  // Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-  //  return ListView(
-  //    padding: const EdgeInsets.only(top: 20.0),
-  //    children: snapshot.map((data) => _buildListItem(context, data)).toList(),
-  //  );
-  // }  
+  
 
   Widget _buildListTile(MyNotification notification) {
     // final record = MyNotification.fromJson(notification);
-
+    
    return Padding(
       // key: ValueKey(record.title),
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -153,19 +226,18 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  // Widget _buildListView(List<DocumentSnapshot> documents) {
-  //   return ListView.builder(
-  //     itemCount: documents.length,
-  //     itemBuilder: (_, i) => _buildListTile(MyNotification.fromSnapshot(documents[i])),
-  //   );
-  // }
-
   Widget _myListView(BuildContext context) {
+    // var hi = myVideo();
+    // print(hi.speaker);
     // final
     final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
     TextStyle style;
     style = _setStyle();
-
+    int _current = 0;
+    // Video vid = futVideo(); //new Video(dateSpoken: 'date', id: 1, title: 'Title', imageName: 'imageNmae', speaker: 'speaker', type: 'type');
+    // Video vid2 = new Video(dateSpoken: 'date', id: 1, title: 'Title2', imageName: 'imageNmae', speaker: 'speaker2', type: 'type');
+    // Video vid3 = new FutureBuilder(
+    //   builder: ,);
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.black,
@@ -192,24 +264,6 @@ class _MyHomePageState extends State<MyHomePage> {
       drawer: Drawer(
         child: Container(
           color: Colors.black,
-            // child: StreamBuilder<QuerySnapshot>(
-            //   stream: _notificationsReference.snapshots(),
-            //   builder: (_, snapshot) {
-            //     if(snapshot.hasData) {
-            //       return _buildListView(snapshot.data.documents);
-            //       // return ListView.builder(
-            //         // itemCount: snapshot.data.documents.length,
-            //         // itemBuilder: (_, i) {
-            //         //   MyNotification notification = snapshot.data.documents[i];
-            //         //   // _buildListItem(_, MyNotification.fromJson(snapshot.data.documents[i])),
-            //         // }
-            //       // );
-            //     } else {
-            //       return CircularProgressIndicator();
-            //     }
-            //   },
-            // ),
-
             child: FutureBuilder(
               future: _getNotifications(),
                 builder: (context, snapshot) {
@@ -235,97 +289,27 @@ class _MyHomePageState extends State<MyHomePage> {
         children: ListTile.divideTiles(
           context: context,
           tiles: [
-            // GestureDetector(
-            //   child: FutureBuilder(
-            //     future: _getEvents(),
-            //     builder: (context, snapshot) {
-            //       if (snapshot.hasData) {
-            //         return ListView.builder(
-            //           itemCount: snapshot.data.length,
-            //           itemBuilder: (context, index) {
-            //           MyEvent event = snapshot.data[index];
-            //           return Card(
-            //             margin: EdgeInsets.symmetric(vertical: 2.0, horizontal: 5.0),
-            //             child: EventListTile(
-            //               event: event,
-            //               // action: () {
-            //               //   Navigator.push(
-            //               //     context,
-            //               //     MaterialPageRoute(
-            //               //       builder: (context) => EventDetailsScreen(event: event)
-            //               //     )
-            //               //   );
-            //               // },
-            //             ));
-            //           },
-            //         );
-            //       } else {
-            //         return Center(child: CircularProgressIndicator());
-            //       }
-            //     },
-            //   ),
+
+
+            // autoPlayDemo,
+
+            // CarouselSlider(
+            //   items: child,
+            //   autoPlay: true,
+            //   enlargeCenterPage: true,
+            //   aspectRatio: 2.0,
+            //   onPageChanged: (index) {
+            //     setState(() {
+            //       _current = index;
+            //     });
+            //   },
             // ),
 
-            GestureDetector(
-              onTap: () {
-                // MaterialPageRoute(
-                //           builder: (context) => EventDetailsScreen(event: event)
-                // );
-              },
-              child: FutureBuilder(
-                future: _getEvents(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
 
-                    MyEvent event = snapshot.data[0];
-                    return Container (
-                      height: 200,
-                      child: Center(child: Text(event.title, style: style)),
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          new BoxShadow(
-                              color: Colors.black,
-                              offset: new Offset(0.0, 5.0),
-                              blurRadius: 40.0,
-                              spreadRadius: 40.0)
-                        ],
-                        image: DecorationImage(
-                          image: CachedNetworkImageProvider('https://app.lttwchurch.org/LTTW_app_php/uploadsEvent/${event.imageName}'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    );
-                    
-                  } else {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                },
-              ),
-            ),
-            
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => WhoWeAre()));
-              },
-              child: Container(
-                height: 280,
-                child: Center(child: Text('WHO WE ARE', style: style)),
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    new BoxShadow(
-                        color: Colors.black,
-                        offset: new Offset(0.0, 5.0),
-                        blurRadius: 40.0,
-                        spreadRadius: 40.0)
-                  ],
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/pic7.jpg'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
+
+
+
+
             GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -374,7 +358,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             // GestureDetector(
             //   onTap: () {
-                // openBrowser('https://www.lightyouth.org');
+            //     openBrowser('https://www.lightyouth.org');
             //   },
             //   child: Container(
             //     height: 200,
@@ -397,11 +381,11 @@ class _MyHomePageState extends State<MyHomePage> {
             // GestureDetector(
             //   onTap: () {
             //     Navigator.push(context,
-            //         MaterialPageRoute(builder: (context) => GetInvolved()));
+            //         MaterialPageRoute(builder: (context) => Images()));
             //   },
             //   child: Container(
             //     height: 200,
-            //     child: Center(child: Text('GET INVOLVED', style: style)),
+            //     child: Center(child: Text('PICTURES', style: style)),
             //     decoration: BoxDecoration(
             //       boxShadow: [
             //         new BoxShadow(
@@ -411,12 +395,35 @@ class _MyHomePageState extends State<MyHomePage> {
             //             spreadRadius: 40.0)
             //       ],
             //       image: DecorationImage(
-            //         image: AssetImage('assets/images/pic3.jpg'),
+            //         image: AssetImage('assets/images/light_groups.jpg'),
             //         fit: BoxFit.cover,
             //       ),
             //     ),
             //   ),
             // ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => GetInvolved()));
+              },
+              child: Container(
+                height: 200,
+                child: Center(child: Text('GET INVOLVED', style: style)),
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    new BoxShadow(
+                        color: Colors.black,
+                        offset: new Offset(0.0, 5.0),
+                        blurRadius: 40.0,
+                        spreadRadius: 40.0)
+                  ],
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/pic3.jpg'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
             GestureDetector(
               onTap: () {
                 openBrowser('https://pushpay.com/fsp/lighttotheworldchurch?t=8ac91fb4-aca3-0766-9aeb-02027b672f3e');
@@ -466,6 +473,81 @@ class _MyHomePageState extends State<MyHomePage> {
         ).toList(),
       ),
     );
+  }
+
+  // Widget getVids() {
+  //   return FutureBuilder(
+  //     future: _getVideos('All'),
+  //     builder: (context, snapshot) {
+  //       if (snapshot.hasData) {
+  //         return ListView.builder(
+  //           itemCount: snapshot.data.length,
+  //           itemBuilder: (context, index) {
+  //           Video video = snapshot.data[index];
+  //           return Card(
+  //             margin:
+  //                 EdgeInsets.symmetric(vertical: 2.0, horizontal: 5.0),
+              
+  //           },
+  //         );
+  //       } else {
+  //         return Center(child: CircularProgressIndicator());
+  //       }
+  //     },
+  //   );
+  // }
+
+  Video myVideo() {
+    _getVideos('All').then((value) {
+      return value;
+    });
+  }
+
+  Video futVideo() {
+    FutureBuilder(
+      future: _getVideos('All'),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return ListView.builder(
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+            Video video = snapshot.data[index];
+            return Card(
+              margin:
+                  EdgeInsets.symmetric(vertical: 2.0, horizontal: 5.0),
+              child: VideoListTile(
+                video: video,
+                action: () {
+                },
+              ));
+            },
+          );
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+
+  Future<Video> _getVideos(String filter) async {
+    List<Video> list = new List<Video>();
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        //call to a remote file
+        final response = await http.get('https://app.lttwchurch.org/messages.php');
+        //decode to json
+        final usersResponse = json.decode(response.body);
+        //loop throught an array of data
+        for (var item in usersResponse) {
+          final video = Video.fromJsonLocal(item);
+          list.add(video);
+        }
+      }
+    } on SocketException catch (_) {
+      print('not connected');
+    }
+    return list[0];
   }
 
   openBrowser(String url) async{
@@ -576,7 +658,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _sendJsonToken(String myID, String token) async {
-        print('HRHRIRHRIHR_5');
+        // print('HRHRIRHRIHR_5');
         final paramDic = {
           "ID": '$myID', 
           "token": '$token',
@@ -676,3 +758,5 @@ class CustomPopupMenu {
   String title;
   IconData icon;
 }
+
+

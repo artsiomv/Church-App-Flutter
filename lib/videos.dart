@@ -34,27 +34,6 @@ class _VideosState extends State<Videos> {
         child: AppBar(
           title: Text('Watch'),
           actions: <Widget>[
-            // FutureBuilder(
-            //   future: getTypePreference(),
-            //   builder: (context, snapshot) {
-            //     if (snapshot.hasData) {
-            //       return DropdownButton<String>(
-            //         value: _value,
-            //         items: <DropdownMenuItem<String>>[
-            //           new DropdownMenuItem(child: new Text('All'), value: 'All'),
-            //           new DropdownMenuItem(child: new Text('LTTW'), value: 'LTTW'),
-            //           new DropdownMenuItem(child: new Text('HS Ministry'), value: 'HS Ministry'),
-            //           new DropdownMenuItem(child: new Text('Light Youth'), value: 'Light Youth'),
-            //         ], 
-            //         onChanged: (String value) {
-            //           setState(() => _value = value);
-            //           // saveTypePreference(value);
-            //         },
-            //       );
-            //     } else {
-            //       // saveTypePreference('All');
-            //     }
-            //   }
               DropdownButton<String>(
                 value: _value,
                 items: <DropdownMenuItem<String>>[
